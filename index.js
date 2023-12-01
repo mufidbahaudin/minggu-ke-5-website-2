@@ -8,33 +8,37 @@ var jsonParser = bodyParser.json()
 
 var urlencodedParser = bodyParser.urlencoded({ extended:false})
 
-const port = 3000
+const port = 3001
 
 app.use(cors())
 app.use(jsonParser)
 app.use(urlencodedParser)
 
-app.get('/', (req, res) => {
-  res.json('Hello World!')
+app.get('/', async(req, res) => {
+  res.json('website-b')
 })
+app.get('/trigger-webhook-event', async(req, res) => {
 
-app.post('/login', (req, res) => {
-    const username = 'mufid'
-    const password = '221202'
-
-    //return semua kondisi
-    if(req.body.username !== username) {
-        res.json({
-            status : 'error, username not found'})
-    }
-
-    if(req.body.password !== password) {
-        res.json({status: 'error, wrong password'})
+  try {
+    // do something to trigger website a
+  const data = {
+    secret: "rahasia123",
+    event: "event-a",
 }
+  const response = await fetch('http://localhost:3000/github-event5', {
+    method:'POST' ,
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify(data)
+  })
 
-
-    res.json({ status: 'success'})
+  //return success
+  res.json('event success')
+  } catch (error) {
+    console.error(error)
+  }
 })
+
+
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
